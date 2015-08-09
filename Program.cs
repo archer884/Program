@@ -32,7 +32,6 @@ namespace First_Algorithm_Pointless
                 //display_finalized_list();
                 //System.Threading.Thread.Sleep(10000);
                 check = 0;
-                Temp_List_Of_Numbers.Clear();
                 in_case_list_isnt_prime();
                 foreach (int i in Temp_List_Of_Numbers)
                 {
@@ -83,6 +82,7 @@ namespace First_Algorithm_Pointless
 
         static void in_case_list_isnt_prime()
         {
+            Temp_List_Of_Numbers.Clear();
             foreach (int i in Final_List_Of_Numbers)
             {
                 if (i % 2 == 0 && i >= 4)
