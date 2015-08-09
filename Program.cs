@@ -1,29 +1,23 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace First_Algorithm_Pointless
+namespace FirstAlgorithmPointless
 {
     class Program
     {
-        static List<int> Random_List_Of_Numbers = new List<int>();
-        static List<int> Final_List_Of_Numbers = new List<int>();
-        static List<int> Temp_List_Of_Numbers = new List<int>();
-
         static void Main(string[] args)
         {
-            create_random_list();
-            simple_algorithm();
-            program_logic();
-           display_random_list();
-           display_finalized_list();
-            //check_if_number_is_prime();
-            System.Threading.Thread.Sleep(60000); //pauses the console to read for 1 minute
+            var randomNumbers = CreateRandomList();
+            var finalNumbers = ProgramLogic(SimpleAlgorithm(randomNumbers));
+            
+            PrintValues(randomNumbers);
+            PrintFactors(finalNumbers);
         }
 
-        static void program_logic()
+        static IList<int> ProgramLogic(IList<int> values)
         {
             //bool is_entire_list_prime = false;
             int check = 0;
@@ -32,63 +26,101 @@ namespace First_Algorithm_Pointless
                 //display_finalized_list();
                 //System.Threading.Thread.Sleep(10000);
                 check = 0;
-                in_case_list_isnt_prime();
-                foreach (int i in Temp_List_Of_Numbers)
+
+                values = Reduce(values);
+                foreach (int i in values)
                 {
-                    if (check_if_number_is_prime(i) == 0) { break; } // if isn't prime
-                    if (check_if_number_is_prime(i) != 0) { check += 1; } // if is prime
+                    if (IsPrime(i))
+                    {
+                        check++;
+                    }
                 }
             }
+            return values;
         }
 
-        private static int check_if_number_is_prime(int number)
-       {
+        private static bool IsPrime(int number)
+        {
             int i;
             for (i = 2; i < number; i++)
             {
                 if (number % i == 0)
                 {
-                    return 0;
+                    return false;
                 }
             }
             if (i == number)
             {
-                return 1;
+                return true;
             }
-           return 0;
+            return false;
         }
 
-        static void display_random_list()
+        static void PrintValues(IList<int> list)
         {
-            int amount_in_array = 0;
-            foreach (int i in Random_List_Of_Numbers)
+            foreach (int i in list)
             {
-                amount_in_array += 1;
                 Console.WriteLine(i);
             }
-            Console.WriteLine("Number of items is " + amount_in_array);
+            Console.WriteLine("Item count: {0}", list.Count);
         }
 
-        static void display_finalized_list()
+        static void PrintFactors(IList<int> list)
         {
-            int amount_in_array = 0;
-            foreach (int i in Final_List_Of_Numbers)
+            for (int i = 0; i < list.Count; i++)
             {
-                amount_in_array += 1;
-                Console.WriteLine(i.ToString() + "<--- No. " + amount_in_array.ToString());
+                Console.WriteLine("{0}\t<-- #{1}", list[i], i + 1);
             }
-            Console.WriteLine("Number of items is " + amount_in_array);
+            Console.WriteLine("Number of items is " + list.Count);
         }
 
-        static void in_case_list_isnt_prime()
+        static IList<int> Reduce(IList<int> values)
         {
-            Temp_List_Of_Numbers.Clear();
-            foreach (int i in Final_List_Of_Numbers)
+            var list = new List<int>();
+
+            foreach (int i in values)
             {
                 if (i % 2 == 0 && i >= 4)
                 {
                     int x = i / 2;
-                    Temp_List_Of_Numbers.Add(x);
+                    list.Add(x);
+                }
+                else if (i % 2 != 0 && i >= 4)
+                {
+                    for (int z = 3; z <= i; z++)
+                    {
+                        if (i % z == 0 && i != z)
+                        {
+                            int y = i / z;
+                            list.Add(y);
+                            break;
+                        }
+                        if (i == z)
+                        {
+                            list.Add(z);
+                            break;
+                        }
+                    }
+                }
+                else if (i < 4)
+                {
+                    list.Add(i);
+                }
+            }
+
+            return list;
+        }
+
+        static IList<int> SimpleAlgorithm(IEnumerable<int> source)
+        {
+            var filteredList = new List<int>();
+
+            foreach (int i in source)
+            {
+                if (i % 2 == 0 && i >= 4)
+                {
+                    int x = i / 2;
+                    filteredList.Add(x);
                 }
                 if (i % 2 != 0 && i >= 4)
                 {
@@ -97,65 +129,36 @@ namespace First_Algorithm_Pointless
                         if (i % z == 0 && i != z)
                         {
                             int y = i / z;
-                            Temp_List_Of_Numbers.Add(y);
+                            filteredList.Add(y);
                             break;
                         }
                         if (i == z)
                         {
-                            Temp_List_Of_Numbers.Add(z);
+                            filteredList.Add(z);
                             break;
                         }
                     }
                 }
                 if (i < 4)
                 {
-                    Temp_List_Of_Numbers.Add(i);
+                    filteredList.Add(i);
                 }
             }
+
+            return filteredList;
         }
 
-        static void simple_algorithm()
+        static IList<int> CreateRandomList()
         {
-            foreach (int i in Random_List_Of_Numbers)
-            {
-                if (i % 2 == 0 && i >= 4) 
-                { 
-                    int x = i / 2;
-                    Final_List_Of_Numbers.Add(x);
-                }
-                if (i % 2 != 0 && i >= 4) 
-                {
-                    for (int z = 3; z <= i; z++)
-                    {
-                        if (i % z == 0 && i != z) 
-                        {
-                            int y = i / z;
-                            Final_List_Of_Numbers.Add(y);
-                            break;
-                        }
-                        if (i == z)
-                        {
-                            Final_List_Of_Numbers.Add(z);
-                            break;
-                        }
-                    }
-                }
-                if (i < 4) 
-                { 
-                    Final_List_Of_Numbers.Add(i); 
-                }
-            }
-        }
+            var rand = new Random();
+            var list = new List<int>();
 
-        static void create_random_list()
-        {
-            Random rand = new Random();
-
-            for (int i = 1; i < 101; i++)
+            for (int i = 0; i < 100; i++)
             {
-                int x = rand.Next(3, 100);
-                Random_List_Of_Numbers.Add(x);
+                list.Add(rand.Next(3, 100));
             }
+
+            return list;
         }
     }
 }
